@@ -16,10 +16,11 @@ class User(db.Model, UserMixin):
     rollno = db.Column(db.Integer, unique=True, nullable=False)
     name = db.Column(db.String(120), nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
-    section = db.Column(db.String(20), unique=True, nullable=False)
+    section = db.Column(db.String(20),nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
     posts = db.relationship('Post', backref='author', lazy=True)
+    # is_coordinator = db.Column(db.Boolean, default=False)
     # totalPresents = db.Column(db.Integer, nullable=False, default=0)
     # totalAbsents = db.Column(db.Integer, nullable=False, default=0)
 
@@ -41,3 +42,5 @@ class Post(db.Model):
 
 #need location table and section table(6 sections)
 #function to add a section (new table) and set his coordinator (no need to set this),ask students to register themselves.
+
+#add functionaliy to change or set class coordinates (because classes can be merged , changed)

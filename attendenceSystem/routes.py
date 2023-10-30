@@ -23,15 +23,21 @@ posts = [
     }
 ]
 
+
+# def auth():
+#     if current_user.is_authenticated and current_user.section != 'Coordinator':
+#         return True
+#     return False
+
 @app.route("/studentPage")
 def studentPage():
-    if current_user.is_authenticated:
+    if current_user.is_authenticated and current_user.section != 'Coordinator':
         return render_template("studentPage.html", posts=posts)
     return redirect(url_for('login'))
 
 @app.route("/coordinatorPage")
 def coordinatorPage():
-    if current_user.is_authenticated:
+    if current_user.is_authenticated and current_user.section == 'Coordinator':
         return render_template("coordinatorPage.html", posts=posts)
     return redirect(url_for('login'))
 
@@ -45,7 +51,12 @@ def about():
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('studentPage'))
+        # print(current_user.section)
+        if current_user.section == 'Coordinator':
+            return redirect(url_for('coordinatorPage'))
+        else:
+            return redirect(url_for('studentPage'))
+    
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
@@ -62,8 +73,21 @@ def register():
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/login", methods=['GET', 'POST'])
 def login():
+    # print(current_user)
+    # if current_user.is_authenticated and current_user.section != 'Coordinator':
+    #     # print(current_user.section)
+    #     return redirect(url_for('studentPage'))
+    # elif current_user.is_authenticated and current_user.section == 'Coordinator':
+    #     return redirect(url_for('coordinatorPage'))
+
+
     if current_user.is_authenticated:
-        return redirect(url_for('studentPage'))
+        # print(current_user.section)
+        if current_user.section == 'Coordinator':
+            return redirect(url_for('coordinatorPage'))
+        else:
+            return redirect(url_for('studentPage'))
+
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(rollno=form.id.data).first()
