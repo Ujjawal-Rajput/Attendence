@@ -1,15 +1,78 @@
 {% extends "layout.html" %}
 {% block content %}
-    {% for post in posts %}
-        <article class="media content-section">
-          <div class="media-body">
-            <div class="article-metadata">
-              <a class="mr-2" href="#">{{ post.author }}</a>
-              <small class="text-muted">{{ post.date_posted }}</small>
-            </div>
-            <h2><a class="article-title" href="#">{{ post.title }}</a></h2>
-            <p class="article-content">{{ post.content }}</p>
-          </div>
-        </article>
-    {% endfor %}
+  <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+    <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+    <label class="btn btn-outline-primary" for="btnradio1">2A</label>
+
+    <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+    <label class="btn btn-outline-primary" for="btnradio2">2B</label>
+
+    <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
+    <label class="btn btn-outline-primary" for="btnradio3">2C</label>
+
+    <input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off">
+    <label class="btn btn-outline-primary" for="btnradio4">2D</label>
+
+    <input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off">
+    <label class="btn btn-outline-primary" for="btnradio5">2E</label>
+
+    <input type="radio" class="btn-check" name="btnradio" id="btnradio6" autocomplete="off">
+    <label class="btn btn-outline-primary" for="btnradio6">2F</label>
+  </div>
+  <br>
+  
+  
+  <div class="btn-group mt-3" role="group" aria-label="Basic radio toggle button group">
+    
+        <input type="radio" class="btn-check" name="btnradio2" id="btnradio7" autocomplete="off" checked>
+        <label class="btn btn-outline-primary" for="btnradio7">Present</label>
+    
+        <input type="radio" class="btn-check" name="btnradio2" id="btnradio8" autocomplete="off">
+        <label class="btn btn-outline-primary" for="btnradio8">Absent</label>
+    
+  </div>
+
+
+
+
+
+  <div class="list-group mt-3">
+
+    <p>Total Students Present : 60</p>
+    <p>Total Students Absent : 18</p>
+    <div>
+      <button type="button" class="list-group-item list-group-item-action active" style="background-color: steelblue;" aria-current="true">
+        Present students
+      </button>
+      <ol class="list-group list-group-numbered">
+        <!-- use for loop / use ajax to innerHTML.  -->
+        <li class="list-group-item">Rahul</li>
+        <li class="list-group-item">Ujjawal</li>
+        <li class="list-group-item">Veezoo</li>
+      </ol>
+
+    </div>
+  
+    <!-- <div>
+      <button type="button" class="list-group-item list-group-item-action active" aria-current="true">
+        Absent students
+      </button>
+      <button type="button" class="list-group-item list-group-item-action">A second button item</button>
+      <button type="button" class="list-group-item list-group-item-action">A third button item</button>
+      <button type="button" class="list-group-item list-group-item-action">A fourth button item</button>
+      <button type="button" class="list-group-item list-group-item-action" disabled>A disabled button item</button>
+
+    </div> -->
+  </div>
+
+
+
+
+
+
+  
+
+  {% for post in posts %}
+
+  {% endfor %}
 {% endblock content %}

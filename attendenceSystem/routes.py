@@ -23,10 +23,16 @@ posts = [
     }
 ]
 
-@app.route("/home")
-def home():
+@app.route("/studentPage")
+def studentPage():
     if current_user.is_authenticated:
         return render_template("studentPage.html", posts=posts)
+    return redirect(url_for('login'))
+
+@app.route("/coordinatorPage")
+def coordinatorPage():
+    if current_user.is_authenticated:
+        return render_template("coordinatorPage.html", posts=posts)
     return redirect(url_for('login'))
 
 @app.route("/about")
@@ -39,7 +45,7 @@ def about():
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('studentPage'))
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
@@ -57,15 +63,20 @@ def register():
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('studentPage'))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(rollno=form.id.data).first()
-        if user and bcrypt.check_password_hash(user.password, form.password.data):
+        # if (form.id.data==123 and form.password.data==000):
+        #     login_user(user, remember=form.remember.data)
+        #     return redirect(url_for('coordinatorPage'))
         # if form.id.data == 2202310100107 and form.password.data == 'password':
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
+            if (user.rollno==123):
+                return redirect(url_for('coordinatorPage'))
             next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('home'))
+            return redirect(next_page) if next_page else redirect(url_for('studentPage'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', form=form)
@@ -75,7 +86,7 @@ def login():
 @app.route("/logout")
 def logout():
     logout_user()
-    return redirect(url_for('home'))
+    return redirect(url_for('studentPage'))
 
 
 def save_picture(form_picture):

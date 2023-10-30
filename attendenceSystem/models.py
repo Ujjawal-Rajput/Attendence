@@ -12,7 +12,7 @@ def load_user(user_id):
 
 class User(db.Model, UserMixin):
     # add p and a column also.
-    id = db.Column(db.Integer, primary_key=True) #unique number id
+    id = db.Column(db.Integer, primary_key=True, unique=True) #unique number id
     rollno = db.Column(db.Integer, unique=True, nullable=False)
     name = db.Column(db.String(120), nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
@@ -20,6 +20,9 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
     posts = db.relationship('Post', backref='author', lazy=True)
+    # totalPresents = db.Column(db.Integer, nullable=False, default=0)
+    # totalAbsents = db.Column(db.Integer, nullable=False, default=0)
+
 
     def __repr__(self):
         return f"User('{self.id}', '{self.rollno}', '{self.name}','{self.image_file}', '{self.section}', '{self.email}', '{self.password}')"
