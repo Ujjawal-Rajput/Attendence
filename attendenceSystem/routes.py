@@ -228,8 +228,5 @@ def process_frame():
         return jsonify({"recognized_faces": face_names})
         # return render_template('studentPage.html')
         # flash('Present marked', 'success')
-
-
-
     except Exception as e:
         return jsonify({"error": str(e)})
