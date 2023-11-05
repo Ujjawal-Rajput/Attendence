@@ -11,6 +11,7 @@ import cv2
 import numpy as np
 import csv
 from datetime import datetime
+import geopy.distance
 
 
 posts = [
@@ -161,13 +162,30 @@ def account():
     return render_template('account.html', title='Account',image_file=image_file, form=form)
 
 
+def is_student_in_classroom(student_coordinates,class_coordinates):
+    threshold_distance=27 #in meter
+    distance = geopy.distance.distance(class_coordinates,student_coordinates)
+    # print(distance*1000)
+    return distance*1000 <= threshold_distance
+
 @app.route('/process_frame', methods=['POST'])
 def process_frame():
-    user_image = face_recognition.load_image_file("photos/tata.jpg") #session user image-profile
+    students_latitude=28.682085
+    student_longitude=77.341755
+    student_coordinates=(students_latitude,student_longitude)
+    class_coordinates=(28.682018,77.342015)
+
+    if is_student_in_classroom(student_coordinates,class_coordinates):
+        pass
+    else:
+        return jsonify({"message": "Not in college"})
+    
+    image_path=os.path.join(app.root_path, 'static/img', current_user.image_file)
+    user_image = face_recognition.load_image_file(image_path) #session user image-profile
     user_encoding = face_recognition.face_encodings(user_image)[0]
 
     known_face_encoding = [user_encoding]
-    known_faces_names = ["ujju"] #session user name-username
+    known_faces_names = [current_user.name] #session user name-username
     students = known_faces_names.copy()
     try:
         # Receive and process video frames from JavaScript
@@ -208,6 +226,10 @@ def process_frame():
             #     lnwriter.writerow([name, current_time])
 
         return jsonify({"recognized_faces": face_names})
+        # return render_template('studentPage.html')
+        # flash('Present marked', 'success')
+
+
 
     except Exception as e:
         return jsonify({"error": str(e)})

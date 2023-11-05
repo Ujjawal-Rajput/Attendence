@@ -26,17 +26,17 @@
 
 
 
-<div class="d-grid gap-2 col-6 mx-auto">
 
-    <div id="video-container">
-        <video id="video" autoplay></video>
-        <button class="btn btn-primary bg-steel" type="button" id="start-button">Mark Attendence</button>
-        <button class="btn btn-primary bg-steel" type="button" id="stop-button">Stop camera</button>
+<div class="content-section">
+    <div class="d-grid gap-2 col-10 mx-auto" id="video-container">
+        <div id="result"></div>
+        <video class="w-100 p-3" id="video" autoplay></video>
+        <button class="btn btn-primary" type="button" id="start-button">start Attendence</button>
+        <button class="btn btn-primary" type="button" id="stop-button">Stop camera</button>
+        <button class="btn btn-primary bg-steel" id="matchButton">Match</button>
     </div>
-    <button class="btn btn-primary bg-steel" id="matchButton">Match</button>
-    <div id="result"></div>
-
 </div>
+
 
 
 
@@ -57,19 +57,19 @@
 <h3 class="mt-5">Previous Attendence :</h3>
 <table class="table mt-2">
     <thead class="border-black border-2">
-      <tr>
-        <th scope="col">S.No.</th>
-        <th scope="col">Date</th>
-        <th scope="col">P/A</th>
-      </tr>
+        <tr>
+            <th scope="col">S.No.</th>
+            <th scope="col">Date</th>
+            <th scope="col">P/A</th>
+        </tr>
     </thead>
     <tbody class="border-black border-2">
-      <tr>
-        <th scope="row">1</th>
-        <td>18/10/23</td>
-        <td>P</td>
-      </tr>
-      <!-- <tr>
+        <tr>
+            <th scope="row">1</th>
+            <td>18/10/23</td>
+            <td>P</td>
+        </tr>
+        <!-- <tr>
         <th scope="row">2</th>
         <td>Jacob</td>
         <td>Thornton</td>
@@ -81,23 +81,31 @@
         <td>@twitter</td>
       </tr> -->
     </tbody>
-  </table>
+</table>
 
 
-  <script>
+<script>
     let videoStream;
     const video = document.getElementById('video');
     const startButton = document.getElementById('start-button');
     const stopButton = document.getElementById('stop-button');
     const matchButton = document.getElementById('matchButton');
     const resultDiv = document.getElementById('result');
+    stopButton.disabled = true;
+    stopButton.style.display = "none";
+    matchButton.disabled = true;
+    matchButton.style.display = "none";
 
     startButton.addEventListener('click', async () => {
         try {
             videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
             video.srcObject = videoStream;
             startButton.disabled = true;
+            startButton.style.display = "none";
             stopButton.disabled = false;
+            stopButton.style.display = "block";
+            matchButton.disabled = false;
+            matchButton.style.display = "block";
         } catch (error) {
             console.error('Error accessing webcam:', error);
         }
@@ -108,12 +116,17 @@
             videoStream.getTracks().forEach(track => track.stop());
             video.srcObject = null;
             startButton.disabled = false;
+            startButton.style.display = "block";
             stopButton.disabled = true;
+            stopButton.style.display = "none";
+            matchButton.disabled = true;
+            matchButton.style.display = "none";
         }
     });
 
     matchButton.addEventListener('click', () => {
         if (videoStream) {
+            resultDiv.innerHTML = `Recognising...`;
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
             canvas.width = video.videoWidth;
@@ -124,21 +137,24 @@
             canvas.toBlob(blob => {
                 const formData = new FormData();
                 formData.append('frame', blob, 'frame.jpg');
-
+                
                 // Send the frame data to the server with the correct content type
                 fetch('/process_frame', {
                     method: 'POST',
                     body: formData,
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) {
-                        resultDiv.innerHTML = `Error: ${data.error}`;
-                    } else {
-                        resultDiv.innerHTML = `Recognized Faces: ${data.recognized_faces}`;
-                        // resultDiv.innerHTML = `Recognized Faces: ${data.recognized_faces.join(', ')}`;
-                    }
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            resultDiv.innerHTML = `Error: ${data.error}`;
+                        } else if (data.message) {
+                            resultDiv.innerHTML = `Message: ${data.message}`;
+                        } else {
+                            resultDiv.innerHTML = `Recognized Faces: ${data.recognized_faces}`;
+
+                            // resultDiv.innerHTML = `Recognized Faces: ${data.recognized_faces.join(', ')}`;
+                        }
+                    });
             }, 'image/jpeg');
         }
     });
