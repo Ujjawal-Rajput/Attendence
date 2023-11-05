@@ -6,6 +6,11 @@ from attendenceSystem import app, db, bcrypt
 from attendenceSystem.forms import RegistrationForm, LoginForm, UpdateAccountForm
 from attendenceSystem.models import User, Post
 from flask_login import login_user, current_user, logout_user, login_required
+import face_recognition
+import cv2
+import numpy as np
+import csv
+from datetime import datetime
 
 
 posts = [
@@ -154,3 +159,55 @@ def account():
         form.email.data = current_user.email
     image_file = url_for('static', filename='img/' + current_user.image_file)
     return render_template('account.html', title='Account',image_file=image_file, form=form)
+
+
+@app.route('/process_frame', methods=['POST'])
+def process_frame():
+    user_image = face_recognition.load_image_file("photos/tata.jpg") #session user image-profile
+    user_encoding = face_recognition.face_encodings(user_image)[0]
+
+    known_face_encoding = [user_encoding]
+    known_faces_names = ["ujju"] #session user name-username
+    students = known_faces_names.copy()
+    try:
+        # Receive and process video frames from JavaScript
+        frame_data = request.files['frame']  # Get the frame data from the client
+
+        if frame_data is None:
+            return jsonify({"error": "No frame data received"})
+
+        # Read the frame data and decode it
+        frame_bytes = frame_data.read()
+        nparr = np.frombuffer(frame_bytes, np.uint8)
+        frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+        # Check if the frame is empty or not successfully decoded
+        if frame is None:
+            return jsonify({"error": "Invalid frame format"})
+
+        small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
+        rgb_small_frame = cv2.cvtColor(small_frame, cv2.COLOR_BGR2RGB)
+
+        face_locations = face_recognition.face_locations(rgb_small_frame)
+        face_encodings = face_recognition.face_encodings(rgb_small_frame, face_locations)
+        face_names = []
+
+        for face_encoding in face_encodings:
+            matches = face_recognition.compare_faces(known_face_encoding, face_encoding)
+            name = ""
+            face_distance = face_recognition.face_distance(known_face_encoding, face_encoding)
+            best_match_index = np.argmin(face_distance)
+            if matches[best_match_index]:
+                name = known_faces_names[best_match_index]
+
+            face_names.append(name)
+            # if name in students:
+            #     # students.remove(name)
+            #     print(students)
+            #     current_time = now.strftime("%H-%M-%S")
+            #     lnwriter.writerow([name, current_time])
+
+        return jsonify({"recognized_faces": face_names})
+
+    except Exception as e:
+        return jsonify({"error": str(e)})
