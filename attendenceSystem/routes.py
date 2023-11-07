@@ -163,17 +163,22 @@ def account():
 
 
 def is_student_in_classroom(student_coordinates,class_coordinates):
-    threshold_distance=27 #in meter
+    threshold_distance=0.07 #in km
     distance = geopy.distance.distance(class_coordinates,student_coordinates)
-    # print(distance*1000)
-    return distance*1000 <= threshold_distance
+    print(distance)
+    return distance <= threshold_distance
 
 @app.route('/process_frame', methods=['POST'])
 def process_frame():
-    students_latitude=28.682085
-    student_longitude=77.341755
-    student_coordinates=(students_latitude,student_longitude)
-    class_coordinates=(28.682018,77.342015)
+    student_latitude = request.form.get("latitude")
+    student_longitude = request.form.get("longitude")
+    print(student_latitude)
+    print(student_longitude)
+    # students_latitude=28.682085
+    # student_longitude=77.341755
+    student_coordinates=(student_latitude,student_longitude)
+    class_coordinates=(28.681776187231414, 77.34231361360732) #bansal kirana store
+    #28.682080771681647, 77.34172937700261
 
     if is_student_in_classroom(student_coordinates,class_coordinates):
         pass
@@ -212,7 +217,7 @@ def process_frame():
 
         for face_encoding in face_encodings:
             matches = face_recognition.compare_faces(known_face_encoding, face_encoding)
-            name = ""
+            name = ''
             face_distance = face_recognition.face_distance(known_face_encoding, face_encoding)
             best_match_index = np.argmin(face_distance)
             if matches[best_match_index]:
@@ -224,7 +229,12 @@ def process_frame():
             #     print(students)
             #     current_time = now.strftime("%H-%M-%S")
             #     lnwriter.writerow([name, current_time])
-
+        print(face_names)
+        if face_names==['']:
+            return jsonify({"message": "Face isn't matching"})
+        elif face_names==[]:
+            return jsonify({"message": "face is out of focus"})
+        
         return jsonify({"recognized_faces": face_names})
         # return render_template('studentPage.html')
         # flash('Present marked', 'success')

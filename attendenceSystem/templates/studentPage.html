@@ -132,30 +132,56 @@
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            resultDiv.style.color="black";
+
 
             // Convert the captured frame to a Blob
-            canvas.toBlob(blob => {
-                const formData = new FormData();
-                formData.append('frame', blob, 'frame.jpg');
-                
-                // Send the frame data to the server with the correct content type
-                fetch('/process_frame', {
-                    method: 'POST',
-                    body: formData,
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.error) {
-                            resultDiv.innerHTML = `Error: ${data.error}`;
-                        } else if (data.message) {
-                            resultDiv.innerHTML = `Message: ${data.message}`;
-                        } else {
-                            resultDiv.innerHTML = `Recognized Faces: ${data.recognized_faces}`;
 
-                            // resultDiv.innerHTML = `Recognized Faces: ${data.recognized_faces.join(', ')}`;
-                        }
-                    });
-            }, 'image/jpeg');
+
+            if ("geolocation" in navigator) {
+                position = navigator.geolocation.getCurrentPosition(function (position) {
+                    canvas.toBlob(blob => {
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
+                        console.log(latitude, longitude);
+
+
+                        const formData = new FormData();
+                        formData.append('frame', blob, 'frame.jpg');
+                        formData.append("latitude", latitude);
+                        formData.append("longitude", longitude);
+
+                        // Send the frame data to the server with the correct content type
+                        fetch('/process_frame', {
+                            method: 'POST',
+                            body: formData
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.error) {
+                                    resultDiv.innerHTML = `Error: ${data.error}`;
+                                    resultDiv.style.color="red";
+                                } else if (data.message) {
+                                    resultDiv.innerHTML = `Message: ${data.message}`;
+                                    resultDiv.style.color="red";
+                                } else {
+                                    resultDiv.innerHTML = `Recognized Faces: ${data.recognized_faces}`;
+                                    resultDiv.style.color="green";
+
+                                    // resultDiv.innerHTML = `Recognized Faces: ${data.recognized_faces.join(', ')}`;
+                                }
+                            });
+                    }, 'image/jpeg');
+
+
+                    // }
+
+                });
+            }
+
+            else {
+                document.getElementById("locationOutput").textContent = "Geolocation is not available.";
+            }
         }
     });
 </script>
