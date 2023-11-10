@@ -44,3 +44,5 @@ class Post(db.Model):
 #function to add a section (new table) and set his coordinator (no need to set this),ask students to register themselves.
 
 #add functionaliy to change or set class coordinates (because classes can be merged , changed)
+
+#dlib @ file:///C:/Users/rujja/OneDrive/Desktop/attendence/dlib-19.24.1-cp311-cp311-win_amd64.whl#sha256=6f1a5ee167975d7952b28e0ce4495f1d9a77644761cf5720fb66d7c6188ae496

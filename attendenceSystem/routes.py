@@ -177,7 +177,8 @@ def process_frame():
     # students_latitude=28.682085
     # student_longitude=77.341755
     student_coordinates=(student_latitude,student_longitude)
-    class_coordinates=(28.681776187231414, 77.34231361360732) #bansal kirana store
+    class_coordinates=(28.73632768718917, 77.48282227507165) #rd
+    # class_coordinates=(28.681776187231414, 77.34231361360732) #bansal kirana store
     #28.682080771681647, 77.34172937700261
 
     if is_student_in_classroom(student_coordinates,class_coordinates):
