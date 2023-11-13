@@ -96,14 +96,14 @@ def login():
 
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(rollno=form.id.data).first()
+        useris = User.query.filter_by(rollno=form.id.data).first()
         # if (form.id.data==123 and form.password.data==000):
         #     login_user(user, remember=form.remember.data)
         #     return redirect(url_for('coordinatorPage'))
         # if form.id.data == 2202310100107 and form.password.data == 'password':
-        if user and bcrypt.check_password_hash(user.password, form.password.data):
-            login_user(user, remember=form.remember.data)
-            if (user.rollno==123):
+        if useris and bcrypt.check_password_hash(useris.password, form.password.data):
+            login_user(useris, remember=form.remember.data)
+            if (useris.rollno==123):
                 return redirect(url_for('coordinatorPage'))
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('studentPage'))

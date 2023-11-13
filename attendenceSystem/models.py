@@ -12,6 +12,7 @@ def load_user(user_id):
 
 class User(db.Model, UserMixin):
     # add p and a column also.
+    # __tablename__ = 'User'  # Specify the actual table name in your database
     id = db.Column(db.Integer, primary_key=True, unique=True) #unique number id
     rollno = db.Column(db.Integer, unique=True, nullable=False)
     name = db.Column(db.String(120), nullable=False)
@@ -30,6 +31,7 @@ class User(db.Model, UserMixin):
 
 
 class Post(db.Model):
+    # __tablename__ = 'Post'  # Specify the actual table name in your database
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
