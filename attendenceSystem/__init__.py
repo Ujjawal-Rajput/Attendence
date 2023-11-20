@@ -9,6 +9,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = '5791628bb0b13ce0c676dfde280ba245'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sites.db'
 app.config["WTF_CSRF_CHECK_DEFAULT"] = False
+app.config["IMAGE_UPLOADS"] = 'static/img/'
 db = SQLAlchemy(app)
 app.app_context().push()
 bcrypt = Bcrypt(app)

@@ -145,12 +145,15 @@ def account():
         current_user.section = form.section.data
         current_user.email = form.email.data
         if form.upload.data:
-            print(current_user.image_file)
-            # if os.path.exists(url_for('static', filename='img/' + current_user.image_file)):
-            os.remove(url_for('static', filename='img/' + current_user.image_file))
             picture_file = save_picture(form.upload.data)
             current_user.image_file = picture_file
-            print(current_user.image_file)
+            # print(current_user.image_file)
+            # path = os.path.join(app.config["IMAGE_UPLOADS"], current_user.image_file)  
+            # os.remove(path)
+            # path = os.path.join( image.filename)
+            # if os.path.exists(url_for('static', filename='img/' + current_user.image_file)):
+            # os.remove(url_for('static', filename='img/' + current_user.image_file))
+            # print(current_user.image_file)
         # current_user.password = form.password.data
         db.session.commit()
         flash('Your account has been updated!', 'success')
