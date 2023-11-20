@@ -145,8 +145,12 @@ def account():
         current_user.section = form.section.data
         current_user.email = form.email.data
         if form.upload.data:
+            print(current_user.image_file)
+            # if os.path.exists(url_for('static', filename='img/' + current_user.image_file)):
+            os.remove(url_for('static', filename='img/' + current_user.image_file))
             picture_file = save_picture(form.upload.data)
             current_user.image_file = picture_file
+            print(current_user.image_file)
         # current_user.password = form.password.data
         db.session.commit()
         flash('Your account has been updated!', 'success')
@@ -177,8 +181,8 @@ def process_frame():
     # students_latitude=28.682085
     # student_longitude=77.341755
     student_coordinates=(student_latitude,student_longitude)
-    class_coordinates=(28.73632768718917, 77.48282227507165) #rd
-    # class_coordinates=(28.681776187231414, 77.34231361360732) #bansal kirana store
+    # class_coordinates=(28.73632768718917, 77.48282227507165) #rd
+    class_coordinates=(28.681776187231414, 77.34231361360732) #bansal kirana store
     #28.682080771681647, 77.34172937700261
 
     if is_student_in_classroom(student_coordinates,class_coordinates):
