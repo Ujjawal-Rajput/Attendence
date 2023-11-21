@@ -23,9 +23,34 @@ Smart Attendance is an innovative solution designed to streamline the attendance
 8. **Backup and Recovery:** Ensures attendance data is never lost with robust backup solutions.
 9. **Customizable Interface:** The ability to customize the interface to match institutional branding.
 
-## How to Use
+## Structure
 
-*Detailed instructions on how to set up and use Smart Attendance will be provided here.*
+```
+|-- README.md
+|-- requirements.txt ................. 1.
+|-- run.py ........................... 2.
+|-- attend ........................... 3.
+|-- instance ......................... 4.
+`-- attendenceSystem
+    `-- ROOT ......................... 5.
+        |-- static
+        |   `-- img .................. 6.
+        |   `-- css .................. 7.
+                |-- index.css
+        |   `-- js ................... 8.
+        `-- templates ................ 9.
+            |-- about.html
+            |-- account.html
+            |-- coordinatorPage.html
+            |-- layout.html
+            |-- login.html
+            |-- register.html
+            |-- studentPage.html
+        `-- __init__.py
+        `-- forms.py
+        `-- models.py
+        `-- routes.py
+```
 
 ## Installation
 
