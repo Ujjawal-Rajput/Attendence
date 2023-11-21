@@ -26,30 +26,29 @@ Smart Attendance is an innovative solution designed to streamline the attendance
 ## Structure
 
 ```
-|-- README.md
 |-- requirements.txt ................. 1.
 |-- run.py ........................... 2.
 |-- attend ........................... 3.
 |-- instance ......................... 4.
-`-- attendenceSystem
-    `-- ROOT ......................... 5.
-        |-- static
-        |   `-- img .................. 6.
-        |   `-- css .................. 7.
-                |-- index.css
-        |   `-- js ................... 8.
-        `-- templates ................ 9.
-            |-- about.html
-            |-- account.html
-            |-- coordinatorPage.html
-            |-- layout.html
-            |-- login.html
-            |-- register.html
-            |-- studentPage.html
-        `-- __init__.py
-        `-- forms.py
-        `-- models.py
-        `-- routes.py
+|-- README.md ........................ 5.
+`-- attendenceSystem ................. 6.
+    `-- static ....................... 7.
+         `-- img ..................... 8.
+         `-- css ..................... 9.
+            |-- index.css ...... ..... 10.
+         `-- js ...................... 11.
+    `-- templates .................... 12.
+            |-- about.html ........... 13.
+            |-- account.html ......... 14.
+            |-- coordinatorPage.html . 15.
+            |-- layout.html .......... 16.
+            |-- login.html ........... 17.
+            |-- register.html ........ 18.
+            |-- studentPage.html ..... 19.
+    |-- __init__.py .................. 20.
+    |-- forms.py ..................... 21.
+    |-- models.py .................... 22.
+    |-- routes.py .................... 23.
 ```
 
 ## Installation
