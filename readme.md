@@ -29,7 +29,14 @@ Smart Attendance is an innovative solution designed to streamline the attendance
 
 ## Installation
 
-*Instructions for installing the Smart Attendance system will be included here.*
+*Python should be installed in the computer.*
+
+```
+$ pip install -r requirements.txt
+$ python run.py
+```
+
+The result will be available at http://localhost:5000.
 
 ## Contact
 
