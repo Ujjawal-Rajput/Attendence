@@ -31,17 +31,9 @@ Smart Attendance is an innovative solution designed to streamline the attendance
 
 *Instructions for installing the Smart Attendance system will be included here.*
 
-## Contributing
-
-Interested in contributing to the Smart Attendance project? Please read `CONTRIBUTING.md` to learn about our development process, how to propose bugfixes and improvements, and how to build and test your changes to the project.
-
-## License
-
-*Details about the project license and usage rights will be added here.*
-
 ## Contact
 
-*Information on how to reach the development team or support will be included here.*
+*Try emailing for connecting us... (email can be found on this account info.)*
 
 ---
 
