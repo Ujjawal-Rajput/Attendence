@@ -20,26 +20,107 @@ class User(db.Model, UserMixin):
     section = db.Column(db.String(20),nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
-    posts = db.relationship('Post', backref='author', lazy=True)
+    attendence = db.relationship('MarkAttendence', backref='user', lazy=True)
+    # year2 = db.relationship('Year_2', backref='user', lazy=True)
+    # year3 = db.relationship('Year_3', backref='user', lazy=True)
+    # year4 = db.relationship('Year_4', backref='user', lazy=True)
     # is_coordinator = db.Column(db.Boolean, default=False)
     # totalPresents = db.Column(db.Integer, nullable=False, default=0)
     # totalAbsents = db.Column(db.Integer, nullable=False, default=0)
 
 
     def __repr__(self):
-        return f"User('{self.id}', '{self.rollno}', '{self.name}','{self.image_file}', '{self.section}', '{self.email}', '{self.password}')"
+        return f"User('{self.id}', '{self.rollno}', '{self.name}','{self.image_file}', '{self.section}', '{self.email}', '{self.password}','{self.attendence}')"
 
 
-class Post(db.Model):
+# class Post(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     title = db.Column(db.String(100), nullable=False)
+#     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+#     content = db.Column(db.Text, nullable=False)
+#     user_id = db.Column(db.Integer, db.ForeignKey('user.rollno'), nullable=False)
+
+#     def __repr__(self):
+#         return f"Post('{self.title}', '{self.date_posted}')"
+    
+
+
+
+
+class MarkAttendence(db.Model):
     # __tablename__ = 'Post'  # Specify the actual table name in your database
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
+    rollno = db.Column(db.Integer, db.ForeignKey('user.rollno'), unique=True, nullable=False)
+    # user_id = db.Column(db.Integer, db.ForeignKey('user.rollno'), nullable=False)
+    section = db.Column(db.String(20),nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    content = db.Column(db.Text, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
 
     def __repr__(self):
-        return f"Post('{self.title}', '{self.date_posted}')"
+        return f"MarkAttendence('{self.rollno}','{self.section}', '{self.date_posted}')"
+    
+
+
+
+
+
+
+
+# class Year_1(db.Model):
+#     # __tablename__ = 'Post'  # Specify the actual table name in your database
+#     id = db.Column(db.Integer, primary_key=True)
+#     rollno = db.Column(db.Integer, db.ForeignKey('user.rollno'), unique=True, nullable=False)
+#     # user_id = db.Column(db.Integer, db.ForeignKey('user.rollno'), nullable=False)
+#     section = db.Column(db.String(20),nullable=False)
+#     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+
+#     def __repr__(self):
+#         return f"Year_1('{self.rollno}', '{self.user_id}','{self.section}', '{self.date_posted}')"
+    
+
+
+# class Year_2(db.Model):
+#     # __tablename__ = 'Post'  # Specify the actual table name in your database
+#     id = db.Column(db.Integer, primary_key=True)
+#     rollno = db.Column(db.Integer, db.ForeignKey('user.rollno'), unique=True, nullable=False)
+#     # user_id = db.Column(db.Integer, db.ForeignKey('user.rollno'), nullable=False)
+#     section = db.Column(db.String(20),nullable=False)
+#     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+
+#     def __repr__(self):
+#         return f"Year_2('{self.rollno}', '{self.user_id}','{self.section}', '{self.date_posted}')"
+    
+
+
+# class Year_3(db.Model):
+#     # __tablename__ = 'Post'  # Specify the actual table name in your database
+#     id = db.Column(db.Integer, primary_key=True)
+#     rollno = db.Column(db.Integer, db.ForeignKey('user.rollno'), unique=True, nullable=False)
+#     # user_id = db.Column(db.Integer, db.ForeignKey('user.rollno'), nullable=False)
+#     section = db.Column(db.String(20),nullable=False)
+#     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+
+#     def __repr__(self):
+#         return f"Year_3('{self.rollno}', '{self.user_id}','{self.section}', '{self.date_posted}')"
+    
+
+
+# class Year_4(db.Model):
+#     # __tablename__ = 'Post'  # Specify the actual table name in your database
+#     id = db.Column(db.Integer, primary_key=True)
+#     rollno = db.Column(db.Integer, db.ForeignKey('user.rollno'), unique=True, nullable=False)
+#     # user_id = db.Column(db.Integer, db.ForeignKey('user.rollno'), nullable=False)
+#     section = db.Column(db.String(20),nullable=False)
+#     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+
+#     def __repr__(self):
+#         return f"Year_4('{self.rollno}', '{self.user_id}','{self.section}', '{self.date_posted}')"
+
+
 
 
 #need location table and section table(6 sections)

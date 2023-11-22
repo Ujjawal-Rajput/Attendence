@@ -1,33 +1,35 @@
-import os
-import secrets
+import os,secrets,cv2,csv
 from PIL import Image
 from flask import Flask, redirect, render_template, request,jsonify, url_for, session, flash
-from attendenceSystem import app, db, bcrypt
+from attendenceSystem import app, db, bcrypt#, scheduler
 from attendenceSystem.forms import RegistrationForm, LoginForm, UpdateAccountForm
-from attendenceSystem.models import User, Post
+from attendenceSystem.models import User, MarkAttendence
 from flask_login import login_user, current_user, logout_user, login_required
 import face_recognition
-import cv2
 import numpy as np
-import csv
 from datetime import datetime
 import geopy.distance
+# from sqlalchemy import MetaData, Column, String, Date, DateTime, Integer
+# from apscheduler.schedulers.background import BackgroundScheduler
 
 
-posts = [
-    {
-        'author': 'Corey Schafer',
-        'title': 'Blog Post 1',
-        'content': 'First post content',
-        'date_posted': 'April 20, 2018'
-    },
-    {
-        'author': 'Jane Doe',
-        'title': 'Blog Post 2',
-        'content': 'Second post content',
-        'date_posted': 'April 21, 2018'
-    }
-]
+# posts = [
+#     {
+#         'author': 'Corey Schafer',
+#         'title': 'Blog Post 1',
+#         'content': 'First post content',
+#         'date_posted': 'April 20, 2018'
+#     },
+#     {
+#         'author': 'Jane Doe',
+#         'title': 'Blog Post 2',
+#         'content': 'Second post content',
+#         'date_posted': 'April 21, 2018'
+#     }
+# ]
+
+
+
 
 
 # def auth():
@@ -38,19 +40,44 @@ posts = [
 @app.route("/studentPage")
 def studentPage():
     if current_user.is_authenticated and current_user.section != 'Coordinator':
-        return render_template("studentPage.html", posts=posts)
+        return render_template("studentPage.html")
     return redirect(url_for('login'))
 
 @app.route("/coordinatorPage")
 def coordinatorPage():
     if current_user.is_authenticated and current_user.section == 'Coordinator':
-        return render_template("coordinatorPage.html", posts=posts)
+        return render_template("coordinatorPage.html")
     return redirect(url_for('login'))
 
 @app.route("/about")
 def about():
     return render_template('about.html', title='About')
 
+
+
+
+
+# def add_column_daily():
+#     # Generate a unique column name based on the current date
+#     column_name = f'{datetime.now().strftime("%Y%m%d")}'
+
+#     # Check if the column already exists
+#     if column_name not in MarkAttendence.__table__.columns:
+#         # Use MetaData to reflect the existing table structure
+#         meta = MetaData(bind=db.engine)
+#         meta.reflect()
+
+#         # Add the new column to the table
+#         new_column = Column(column_name, Integer)
+#         MarkAttendence.__table__.create_column(new_column)
+
+#         # Commit the changes to the database
+#         db.session.commit()
+
+
+# scheduler = BackgroundScheduler()
+# scheduler.add_job(add_column_daily, trigger='cron', hour=00, minute=2)
+# scheduler.start()
 
 
 
@@ -68,7 +95,20 @@ def register():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         picture_file = save_picture(form.upload.data)
         user = User(rollno=form.rollno.data,name=form.name.data,image_file=picture_file, section=form.section.data ,email=form.email.data, password=hashed_password)
+        add_in_year = MarkAttendence(rollno=form.rollno.data, section=form.section.data)
+        # year = int(form.section.data[0])
+        # print(year)
+        # if year==1:
+        #     add_in_year = Year_1(rollno=form.rollno.data, section=form.section.data)
+        # elif year==2:
+        #     add_in_year = Year_2(rollno=form.rollno.data, section=form.section.data)
+        # elif year==3:
+        #     add_in_year = Year_3(rollno=form.rollno.data, section=form.section.data)
+        # elif year==4:
+        #     add_in_year = Year_4(rollno=form.rollno.data, section=form.section.data)
+        
         db.session.add(user)
+        db.session.add(add_in_year)
         db.session.commit()
         flash('Your account has been created! You are now able to log in', 'success')
         return redirect(url_for('login'))
