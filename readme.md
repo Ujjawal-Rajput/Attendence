@@ -23,25 +23,48 @@ Smart Attendance is an innovative solution designed to streamline the attendance
 8. **Backup and Recovery:** Ensures attendance data is never lost with robust backup solutions.
 9. **Customizable Interface:** The ability to customize the interface to match institutional branding.
 
-## How to Use
+## Structure
 
-*Detailed instructions on how to set up and use Smart Attendance will be provided here.*
+```
+|-- requirements.txt ................. 1.
+|-- run.py ........................... 2.
+|-- attend ........................... 3.
+|-- instance ......................... 4.
+|-- README.md ........................ 5.
+`-- attendenceSystem ................. 6.
+    `-- static ....................... 7.
+         `-- img ..................... 8.
+         `-- css ..................... 9.
+            |-- index.css ...... ..... 10.
+         `-- js ...................... 11.
+    `-- templates .................... 12.
+            |-- about.html ........... 13.
+            |-- account.html ......... 14.
+            |-- coordinatorPage.html . 15.
+            |-- layout.html .......... 16.
+            |-- login.html ........... 17.
+            |-- register.html ........ 18.
+            |-- studentPage.html ..... 19.
+    |-- __init__.py .................. 20.
+    |-- forms.py ..................... 21.
+    |-- models.py .................... 22.
+    |-- routes.py .................... 23.
+```
 
 ## Installation
 
-*Instructions for installing the Smart Attendance system will be included here.*
+*Python should be installed in the computer.*
 
-## Contributing
+```
+$ pip install -r requirements.txt
+$ python run.py
+```
 
-Interested in contributing to the Smart Attendance project? Please read `CONTRIBUTING.md` to learn about our development process, how to propose bugfixes and improvements, and how to build and test your changes to the project.
-
-## License
-
-*Details about the project license and usage rights will be added here.*
+The result will be available at http://localhost:5000.
 
 ## Contact
 
-*Information on how to reach the development team or support will be included here.*
+*Try emailing for connecting us... (email can be found on this account info.)*
 
 ---
 
