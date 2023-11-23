@@ -1,22 +1,28 @@
 {% extends "layout.html" %}
 {% block content %}
 <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-  <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+  <input type="radio" class="btn-check" name="btnradio" id="btnradio1" value="2A" onchange="getSelectedStudent()"
+    autocomplete="off">
   <label class="btn btn-outline-primary" for="btnradio1">2A</label>
 
-  <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+  <input type="radio" class="btn-check" name="btnradio" id="btnradio2" value="2B" onchange="getSelectedStudent()"
+    autocomplete="off" checked>
   <label class="btn btn-outline-primary" for="btnradio2">2B</label>
 
-  <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
+  <input type="radio" class="btn-check" name="btnradio" id="btnradio3" value="2C" onchange="getSelectedStudent()"
+    autocomplete="off">
   <label class="btn btn-outline-primary" for="btnradio3">2C</label>
 
-  <input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off">
+  <input type="radio" class="btn-check" name="btnradio" id="btnradio4" value="2D" onchange="getSelectedStudent()"
+    autocomplete="off">
   <label class="btn btn-outline-primary" for="btnradio4">2D</label>
 
-  <input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off">
+  <input type="radio" class="btn-check" name="btnradio" id="btnradio5" value="2E" onchange="getSelectedStudent()"
+    autocomplete="off">
   <label class="btn btn-outline-primary" for="btnradio5">2E</label>
 
-  <input type="radio" class="btn-check" name="btnradio" id="btnradio6" autocomplete="off">
+  <input type="radio" class="btn-check" name="btnradio" id="btnradio6" value="2F" onchange="getSelectedStudent()"
+    autocomplete="off">
   <label class="btn btn-outline-primary" for="btnradio6">2F</label>
 </div>
 <br>
@@ -35,16 +41,16 @@
 
 <!--make input field to set new coordinates in case classes are merged / changed and again reset original coordinates to oroginal class.-->
 <div class="d-flex mt-3">
-<select class="form-select" aria-label="Default select example">
-  <!-- <option>select class / coordinates</option> -->
-  <option value="123.1.2.1" selected>2B (123.1.2.1)</option>
-  <option value="123.1.3.1"> 2A (123.1.3.1)</option>
-  <option value="123.1.4.1">Python Lab (123.1.4.1)</option>
+  <select class="form-select" aria-label="Default select example">
+    <!-- <option>select class / coordinates</option> -->
+    <option value="123.1.2.1" selected>2B (123.1.2.1)</option>
+    <option value="123.1.3.1"> 2A (123.1.3.1)</option>
+    <option value="123.1.4.1">Python Lab (123.1.4.1)</option>
 
-</select>
-<div class="d-grid gap-2 col-6">
-  <button class="btn btn-primary bg-steel w-25" type="button" onclick="">Change</button>
-</div>
+  </select>
+  <div class="d-grid gap-2 col-6">
+    <button class="btn btn-primary bg-steel w-25" type="button" onclick="">Change</button>
+  </div>
 </div>
 
 
@@ -54,18 +60,31 @@
 
   <p>Total Students Present : 60</p>
   <p>Total Students Absent : 18</p>
-  <div>
-    <button type="button" class="list-group-item list-group-item-action active" style="background-color: steelblue;"
+  <!-- <div>
+     <button type="button" class="list-group-item list-group-item-action active" style="background-color: steelblue;"
       aria-current="true">
       Present students
     </button>
-    <ol class="list-group list-group-numbered">
-      <!-- use for loop / use ajax to innerHTML.  -->
+    <ol class="list-group list-group-numbered" id="">
       <li class="list-group-item">Rahul</li>
       <li class="list-group-item">Ujjawal</li>
       <li class="list-group-item">Veezoo</li>
-    </ol>
+    </ol> 
+  </div> -->
 
+  <div class="container mt-4">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Roll No</th>
+          <th>Attendance</th>
+        </tr>
+      </thead>
+      <tbody id="attendanceTableBody">
+        
+      </tbody>
+    </table>
   </div>
 
   <!-- <div>
@@ -90,4 +109,69 @@
 {% for post in posts %}
 
 {% endfor %}
+
+
+<script>
+
+  function populateTable(data) {
+    const tableBody = document.getElementById("attendanceTableBody");
+
+    // Clear existing rows
+    tableBody.innerHTML = "";
+    // console.log(data)
+    // Populate the table with data
+    data.forEach(student => {
+      // console.log(student)
+      const row = tableBody.insertRow();
+      const nameCell = row.insertCell(0);
+      const rollNoCell = row.insertCell(1);
+      const attendanceCell = row.insertCell(2);
+
+      nameCell.textContent = student.name;
+      rollNoCell.textContent = student.rollno;
+      attendanceCell.textContent = student.attendence || "N/A";
+    });
+  }
+
+  function callAjax(url, selectedValue) {
+    // Make an AJAX request
+    fetch(url, {
+      method: 'POST', // or 'GET' depending on your server-side implementation
+      headers: {
+        'Content-Type': 'application/json',
+        // Add any additional headers as needed
+      },
+      body: JSON.stringify({ selectedValue: selectedValue }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        // Handle the response data
+        console.log(data);
+        populateTable([data]);
+      })
+      .catch(error => {
+        console.log("error");
+        // console.error('Error:', error);
+      });
+  }
+
+  function getSelectedStudent() {
+    // Get the selected radio button
+    var selectedStudent = document.querySelector('input[name="btnradio"]:checked');
+    var selectedValue = selectedStudent.value;
+    console.log(selectedValue)
+    callAjax("/get_students", selectedValue);
+  }
+
+
+  getSelectedStudent();
+
+
+
+
+
+
+
+
+</script>
 {% endblock content %}

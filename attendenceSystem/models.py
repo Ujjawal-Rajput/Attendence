@@ -54,10 +54,10 @@ class MarkAttendence(db.Model):
     # user_id = db.Column(db.Integer, db.ForeignKey('user.rollno'), nullable=False)
     section = db.Column(db.String(20),nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
+    mark = db.Column(db.String(20),nullable=True)
 
     def __repr__(self):
-        return f"MarkAttendence('{self.rollno}','{self.section}', '{self.date_posted}')"
+        return f"MarkAttendence('{self.rollno}','{self.section}', '{self.date_posted}', '{self.mark}')"
     
 
 

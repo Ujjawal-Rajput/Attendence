@@ -9,7 +9,8 @@ import face_recognition
 import numpy as np
 from datetime import datetime
 import geopy.distance
-# from sqlalchemy import MetaData, Column, String, Date, DateTime, Integer
+# from sqlalchemy import text ,MetaData, Column, String, Date, DateTime, Integer, Table
+# from sqlalchemy.schema import MetaData
 # from apscheduler.schedulers.background import BackgroundScheduler
 
 
@@ -46,38 +47,44 @@ def studentPage():
 @app.route("/coordinatorPage")
 def coordinatorPage():
     if current_user.is_authenticated and current_user.section == 'Coordinator':
+        # student_list = MarkAttendence.query.filter_by(section='2B')
+        # toshow=[]
+        # for i in student_list:
+            # toshow.append(i.user.name)
+        # return render_template("coordinatorPage.html", data = toshow)
         return render_template("coordinatorPage.html")
     return redirect(url_for('login'))
+
+@app.route("/get_students", methods=['POST'])
+def get_students():
+    if current_user.is_authenticated and current_user.section == 'Coordinator':
+        data = request.get_json()
+        print(data)
+        users = MarkAttendence.query.filter_by(section=data['selectedValue'])
+    
+        # Extract the values and create a list of dictionaries
+        user_data = [{'rollno':i.rollno,'name': i.user.name, 'attendence': i.mark} for i in users]
+
+        # Convert the list of dictionaries to JSON
+        json_data = {'users': user_data}
+
+        # Render the template and pass the JSON data
+        return json_data
+    else:
+        return {"error":'Fetching failed...'}
+
+
+
+
+
+
+
+
 
 @app.route("/about")
 def about():
     return render_template('about.html', title='About')
 
-
-
-
-
-# def add_column_daily():
-#     # Generate a unique column name based on the current date
-#     column_name = f'{datetime.now().strftime("%Y%m%d")}'
-
-#     # Check if the column already exists
-#     if column_name not in MarkAttendence.__table__.columns:
-#         # Use MetaData to reflect the existing table structure
-#         meta = MetaData(bind=db.engine)
-#         meta.reflect()
-
-#         # Add the new column to the table
-#         new_column = Column(column_name, Integer)
-#         MarkAttendence.__table__.create_column(new_column)
-
-#         # Commit the changes to the database
-#         db.session.commit()
-
-
-# scheduler = BackgroundScheduler()
-# scheduler.add_job(add_column_daily, trigger='cron', hour=00, minute=2)
-# scheduler.start()
 
 
 
@@ -116,6 +123,45 @@ def register():
 
 
 
+
+
+
+# def add_column_daily():
+#     # Generate a unique column name based on the current date
+#     # column_name = f'{datetime.now().strftime("%Y%m%d")}'
+#     # print(column_name)
+
+#     # Check if the column already exists
+#     # table_name = 'MarkAttendence'
+#     # metadata = db.metadata
+#     # engine = db.engine
+
+#     # # Reflect the existing table structure
+#     # metadata.reflect(bind=engine)
+#     # table = metadata.tables.get(table_name)
+
+#     new_column_name = f'{datetime.now().strftime("%d-%m-%Y")}'
+
+    
+#     MarkAttendence.__table__.reflect()
+#     if new_column_name not in MarkAttendence.__table__.columns:
+#         sql_expression = text(f"ALTER TABLE MarkAttendence ADD COLUMN {new_column_name} VARCHAR(50)")
+#         db.session.execute(sql_expression)
+#         db.session.commit()
+#         # new_column = Column(new_column_name, String)
+#         # new_column.create(table)
+#         print("2. ",new_column_name)
+#     print("1. ",new_column_name)
+
+
+# scheduler = BackgroundScheduler()
+# scheduler.add_job(add_column_daily, trigger='cron', hour=00, minute=2)
+# scheduler.start()
+
+
+
+
+
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -132,6 +178,7 @@ def login():
         if current_user.section == 'Coordinator':
             return redirect(url_for('coordinatorPage'))
         else:
+            # add_column_daily()
             return redirect(url_for('studentPage'))
 
     form = LoginForm()
@@ -283,6 +330,18 @@ def process_frame():
         elif face_names==[]:
             return jsonify({"message": "face is out of focus"})
         
+
+        
+        user = MarkAttendence.query.filter_by(rollno=current_user.rollno)
+        # if 
+        # user.mark = 0
+
+        for i in user:
+            print(i.mark)
+            print(type(i.mark))
+            i.mark=int(i.mark) + 1
+        db.session.commit()
+
         return jsonify({"recognized_faces": face_names})
         # return render_template('studentPage.html')
         # flash('Present marked', 'success')
